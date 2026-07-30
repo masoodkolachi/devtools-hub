@@ -1,0 +1,96 @@
+"use client";
+
+import { useState } from "react";
+import { Trash2, ArrowRightLeft } from "lucide-react";
+import { CopyButton } from "@/components/copy-button";
+
+function encode(text: string) {
+  return btoa(unescape(encodeURIComponent(text)));
+}
+
+function decode(text: string) {
+  return decodeURIComponent(escape(atob(text)));
+}
+
+export default function Base64EncoderDecoder() {
+  const [mode, setMode] = useState<"encode" | "decode">("encode");
+  const [input, setInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  let output = "";
+  try {
+    output = input ? (mode === "encode" ? encode(input) : decode(input)) : "";
+    if (error) setError(null);
+  } catch {
+    output = "";
+  }
+
+  const handleSwap = () => {
+    setMode((m) => (m === "encode" ? "decode" : "encode"));
+    setInput(output);
+  };
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="inline-flex rounded-lg border border-black/10 dark:border-white/10 p-1">
+          <button
+            onClick={() => setMode("encode")}
+            className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${
+              mode === "encode" ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900" : "text-neutral-500"
+            }`}
+          >
+            Encode
+          </button>
+          <button
+            onClick={() => setMode("decode")}
+            className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${
+              mode === "decode" ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900" : "text-neutral-500"
+            }`}
+          >
+            Decode
+          </button>
+        </div>
+
+        <button
+          onClick={handleSwap}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-black/10 dark:border-white/10 px-3 py-1.5 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+        >
+          <ArrowRightLeft size={14} /> Swap
+        </button>
+
+        <button
+          onClick={() => setInput("")}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-black/10 dark:border-white/10 px-3 py-1.5 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+        >
+          <Trash2 size={14} /> Clear
+        </button>
+
+        <CopyButton getValue={() => output} className="ml-auto" />
+      </div>
+
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <div>
+          <p className="mb-1.5 text-xs font-medium text-neutral-400">
+            {mode === "encode" ? "Plain text" : "Base64"}
+          </p>
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={mode === "encode" ? "Hello, world!" : "SGVsbG8sIHdvcmxkIQ=="}
+            rows={8}
+            className="w-full resize-none rounded-xl border border-black/10 dark:border-white/10 bg-neutral-50 dark:bg-neutral-900/50 p-4 font-mono text-sm outline-none"
+          />
+        </div>
+        <div>
+          <p className="mb-1.5 text-xs font-medium text-neutral-400">
+            {mode === "encode" ? "Base64" : "Plain text"}
+          </p>
+          <pre className="min-h-[11rem] overflow-auto whitespace-pre-wrap rounded-xl border border-black/10 dark:border-white/10 bg-neutral-50 dark:bg-neutral-900/50 p-4 font-mono text-sm">
+            {output || <span className="text-neutral-400">Invalid input for current mode, or nothing typed yet.</span>}
+          </pre>
+        </div>
+      </div>
+    </div>
+  );
+}
