@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { tools } from "@/lib/tools-config";
 import { categories } from "@/lib/categories";
 
-const siteUrl = "https://devtoolshub.example.com";
+const siteUrl = "https://devtools-hub.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = ["", "/tools", "/categories", "/about", "/blog"].map((path) => ({
