@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     title: "DevTools Hub — 100+ Free Developer Tools",
     description: "A fast, free, and modern collection of 100+ developer tools.",
   },
+  verification: {
+    google: "I8VhUO0GkRQZsaKfak2jr4gZIJqtHvCVctiIP83gclA",
+  },
 };
 
 export default function RootLayout({
