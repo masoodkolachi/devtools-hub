@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 
-const siteUrl = "https://devtools-hub.vercel.app";
+const siteUrl = "https://devtools-hub-rose.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
