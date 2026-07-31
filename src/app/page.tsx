@@ -4,6 +4,7 @@ import { tools } from "@/lib/tools-config";
 import { categories } from "@/lib/categories";
 import { ToolCard } from "@/components/tool-card";
 import { CategoryCard } from "@/components/category-card";
+import { SHOW_AD_PLACEHOLDERS } from "@/lib/site-config";
 
 const stats = [
   { label: "Tools available", value: "100+", icon: Sparkles },
@@ -64,11 +65,13 @@ export default function Home() {
       </section>
 
       {/* Header banner ad placeholder */}
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="flex h-20 items-center justify-center rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-neutral-400">
-          Ad placeholder — header banner
+      {SHOW_AD_PLACEHOLDERS && (
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <div className="flex h-20 items-center justify-center rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-neutral-400">
+            Ad placeholder — header banner
+          </div>
         </div>
-      </div>
+      )}
 
       <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -109,11 +112,13 @@ export default function Home() {
       </section>
 
       {/* In-content ad placeholder */}
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="flex h-24 items-center justify-center rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-neutral-400">
-          Ad placeholder — in-content
+      {SHOW_AD_PLACEHOLDERS && (
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="flex h-24 items-center justify-center rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-neutral-400">
+            Ad placeholder — in-content
+          </div>
         </div>
-      </div>
+      )}
 
       <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
         <h2 className="text-2xl font-semibold text-neutral-900 dark:text-white">Frequently asked questions</h2>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { tools, getTool, getToolsByCategory } from "@/lib/tools-config";
 import { getCategory } from "@/lib/categories";
 import { Breadcrumb } from "@/components/breadcrumb";
+import { SHOW_AD_PLACEHOLDERS } from "@/lib/site-config";
 
 export function generateStaticParams() {
   return tools.map((t) => ({ slug: t.slug }));
@@ -103,16 +104,20 @@ export default async function ToolPage({
           )}
 
           {/* In-content ad placeholder */}
-          <div className="mt-8 flex h-20 items-center justify-center rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-neutral-400">
-            Ad placeholder — in-content
-          </div>
+          {SHOW_AD_PLACEHOLDERS && (
+            <div className="mt-8 flex h-20 items-center justify-center rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-neutral-400">
+              Ad placeholder — in-content
+            </div>
+          )}
         </div>
 
         <aside className="space-y-6">
           {/* Sidebar ad placeholder */}
-          <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-neutral-400">
-            Ad placeholder — sidebar
-          </div>
+          {SHOW_AD_PLACEHOLDERS && (
+            <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-neutral-400">
+              Ad placeholder — sidebar
+            </div>
+          )}
 
           {related.length > 0 && (
             <div>

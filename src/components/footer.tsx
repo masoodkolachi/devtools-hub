@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { categories } from "@/lib/categories";
+import { SHOW_AD_PLACEHOLDERS } from "@/lib/site-config";
 
 export function Footer() {
   return (
@@ -52,9 +53,11 @@ export function Footer() {
         </div>
 
         {/* Footer ad placeholder — no ad code, layout space only */}
-        <div className="mt-10 flex h-16 items-center justify-center rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-neutral-400">
-          Ad placeholder — footer banner
-        </div>
+        {SHOW_AD_PLACEHOLDERS && (
+          <div className="mt-10 flex h-16 items-center justify-center rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-neutral-400">
+            Ad placeholder — footer banner
+          </div>
+        )}
 
         <p className="mt-8 text-center text-xs text-neutral-400">
           © {new Date().getFullYear()} DevTools Hub. Built for developers, free forever.
