@@ -4,6 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { GoogleAnalytics } from "@/components/google-analytics";
 
 const siteUrl = "https://devtools-hub-rose.vercel.app";
 
@@ -50,6 +51,7 @@ export default function RootLayout({
           <Footer />
         </ThemeProvider>
         <SpeedInsights />
+        <GoogleAnalytics />
       </body>
     </html>
   );
