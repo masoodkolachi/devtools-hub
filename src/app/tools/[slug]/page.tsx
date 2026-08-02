@@ -20,20 +20,22 @@ export async function generateMetadata({
   if (!tool) return {};
 
   const url = `/tools/${tool.slug}`;
+  const title = tool.seo?.seoTitle ?? tool.name;
+  const description = tool.seo?.seoDescription ?? tool.description;
   return {
-    title: tool.name,
-    description: tool.description,
+    title,
+    description,
     alternates: { canonical: url },
     openGraph: {
-      title: `${tool.name} | DevTools Hub`,
-      description: tool.description,
+      title,
+      description,
       url,
       type: "website",
     },
     twitter: {
       card: "summary",
-      title: `${tool.name} | DevTools Hub`,
-      description: tool.description,
+      title,
+      description,
     },
   };
 }
@@ -55,15 +57,30 @@ export default async function ToolPage({
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: tool.name,
-    description: tool.description,
+    description: tool.seo?.seoDescription ?? tool.description,
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Any",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   };
 
+  const faqJsonLd = tool.seo?.faqs.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: tool.seo.faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: { "@type": "Answer", text: faq.answer },
+        })),
+      }
+    : null;
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {faqJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      )}
 
       <Breadcrumb
         items={[
@@ -101,6 +118,47 @@ export default async function ToolPage({
                 </div>
               )}
             </div>
+          )}
+
+          {tool.seo && (
+            <article className="mt-12 max-w-2xl">
+              <section>
+                <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
+                  What is a {tool.name}?
+                </h2>
+                <p className="mt-3 leading-relaxed text-neutral-600 dark:text-neutral-300">{tool.seo.intro}</p>
+              </section>
+
+              <section className="mt-8">
+                <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">When to use it</h2>
+                <p className="mt-3 leading-relaxed text-neutral-600 dark:text-neutral-300">{tool.seo.whenToUse}</p>
+              </section>
+
+              <section className="mt-8">
+                <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">How it works</h2>
+                <p className="mt-3 leading-relaxed text-neutral-600 dark:text-neutral-300">{tool.seo.howItWorks}</p>
+              </section>
+
+              {tool.seo.faqs.length > 0 && (
+                <section className="mt-8">
+                  <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
+                    Frequently asked questions
+                  </h2>
+                  <div className="mt-3 divide-y divide-black/5 dark:divide-white/10 rounded-xl border border-black/10 dark:border-white/10">
+                    {tool.seo.faqs.map((faq) => (
+                      <details key={faq.question} className="group p-4">
+                        <summary className="cursor-pointer list-none">
+                          <h3 className="inline font-medium text-neutral-900 dark:text-white">{faq.question}</h3>
+                        </summary>
+                        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+                          {faq.answer}
+                        </p>
+                      </details>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </article>
           )}
 
           {/* In-content ad placeholder */}

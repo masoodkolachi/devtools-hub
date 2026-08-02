@@ -12,6 +12,25 @@
 import { ComponentType } from "react";
 import dynamic from "next/dynamic";
 
+export interface ToolFaq {
+  question: string;
+  answer: string;
+}
+
+export interface ToolSeoContent {
+  /** Optimized <title> — falls back to `${name} — Free Online Tool` if omitted */
+  seoTitle?: string;
+  /** Optimized meta description — falls back to `description` if omitted */
+  seoDescription?: string;
+  /** 150-300 word intro answering "what is this and when do I need it" */
+  intro: string;
+  /** A concrete, realistic scenario — this is the E-E-A-T / differentiation content */
+  whenToUse: string;
+  /** How the tool/technique actually works, in plain language */
+  howItWorks: string;
+  faqs: ToolFaq[];
+}
+
 export interface ToolConfig {
   slug: string;
   name: string;
@@ -22,6 +41,7 @@ export interface ToolConfig {
   exampleInput?: string;
   exampleOutput?: string;
   component: ComponentType;
+  seo?: ToolSeoContent;
 }
 
 export const tools: ToolConfig[] = [
@@ -32,10 +52,43 @@ export const tools: ToolConfig[] = [
     description:
       "Generate one or many RFC-4122 version 4 UUIDs, entirely in your browser. Useful for database keys, test fixtures, and request IDs.",
     category: "developer",
-    keywords: ["uuid", "guid", "id", "identifier", "unique"],
+    keywords: ["uuid generator", "guid generator", "random uuid v4", "generate unique id"],
     exampleInput: "Click Generate",
     exampleOutput: "3f9b2c1a-5d4e-4a11-9c2f-8e7d6a5b4c3d",
     component: dynamic(() => import("@/components/tools/uuid-generator")),
+    seo: {
+      seoTitle: "UUID Generator — Free Random UUID v4 Online",
+      seoDescription:
+        "Generate RFC 4122 version 4 UUIDs instantly, one or in bulk. Cryptographically random, copy-ready, runs entirely in your browser with no tracking.",
+      intro:
+        "A UUID (Universally Unique Identifier) is a 128-bit value formatted as 32 hex digits split into five groups (8-4-4-4-12), like 3f9b2c1a-5d4e-4a11-9c2f-8e7d6a5b4c3d. The version 4 variant this tool generates is random rather than derived from a timestamp or hardware address — 122 of its 128 bits are chosen randomly, which makes the odds of two systems ever generating the same UUID by accident astronomically small, without needing a central authority to hand out IDs. That's what makes UUIDs useful for distributed systems where multiple services need to generate unique IDs independently.",
+      whenToUse:
+        "UUIDs show up constantly as primary keys in databases (especially when you want IDs generated client-side or across multiple services without coordination), as request IDs for tracing a single request through logs across microservices, as API keys or session tokens, and as unique identifiers for test fixtures so parallel test runs don't collide. If you're building a REST API and need a placeholder resource ID while writing example requests, generating a batch here is faster than making one up.",
+      howItWorks:
+        "This tool uses crypto.randomUUID(), a built-in browser API backed by the operating system's cryptographically secure random number generator — the same underlying entropy source used for generating encryption keys. That's an important distinction from UUIDs generated with Math.random(), which is not cryptographically secure and can theoretically be predicted; crypto.randomUUID() doesn't have that weakness. The version (4) and variant bits are set automatically per the RFC 4122 spec so the output is a standards-compliant v4 UUID that any system expecting one will accept.",
+      faqs: [
+        {
+          question: "What's the difference between a UUID and a GUID?",
+          answer:
+            "They're effectively the same thing — GUID (Globally Unique Identifier) is Microsoft's term for the same 128-bit identifier format standardized as UUID in RFC 4122. The formats are interchangeable in practice.",
+        },
+        {
+          question: "Can two UUID v4 values ever collide?",
+          answer:
+            "Theoretically yes, but the probability is negligible — with 122 random bits, you'd need to generate roughly 2.7 quintillion UUIDs before there's a 50% chance of a single collision. For virtually all practical purposes, UUID v4 values are treated as guaranteed unique.",
+        },
+        {
+          question: "Should I use UUID v4 or v7 for database primary keys?",
+          answer:
+            "UUID v4 is fully random, which can hurt database index performance because new rows insert at random locations in the index. UUID v7 (a newer standard) embeds a timestamp so IDs sort roughly chronologically, giving better insert performance for large tables. If your database performance is a concern, v7 is usually the better choice for primary keys specifically.",
+        },
+        {
+          question: "Is it safe to use a UUID as a security token or API key?",
+          answer:
+            "A cryptographically random UUID v4 (like the ones this tool generates) has enough entropy to be unguessable, but UUIDs aren't designed as secrets — they're commonly logged, shown in URLs, and displayed in UIs. For anything security-sensitive, use a dedicated secret generated for that purpose rather than repurposing a UUID.",
+        },
+      ],
+    },
   },
   {
     slug: "json-formatter",
@@ -44,10 +97,43 @@ export const tools: ToolConfig[] = [
     description:
       "Paste messy or minified JSON and get a clean, indented, syntax-checked version back, with clear error messages when something doesn't parse.",
     category: "json",
-    keywords: ["json", "format", "beautify", "validate", "pretty print"],
+    keywords: ["json formatter", "json validator", "json beautifier", "json pretty print", "format json online"],
     exampleInput: '{"name":"Ada","active":true,"tags":["dev","math"]}',
     exampleOutput: '{\n  "name": "Ada",\n  "active": true,\n  "tags": ["dev", "math"]\n}',
     component: dynamic(() => import("@/components/tools/json-formatter")),
+    seo: {
+      seoTitle: "JSON Formatter & Validator — Free Online Tool",
+      seoDescription:
+        "Format, validate, and beautify JSON instantly in your browser. Paste minified or broken JSON and get clean, indented output with clear error messages. No signup, no data leaves your device.",
+      intro:
+        "A JSON formatter takes compact or poorly indented JSON — the kind you get from a minified API response, a database export, or a log file — and rewrites it with consistent indentation, line breaks, and spacing so a human can actually read it. This tool also validates the JSON as it formats it: if a brace is unbalanced, a comma is missing, or a string isn't properly quoted, you'll get a specific error instead of a silent failure. Because everything runs in your browser using the built-in JSON.parse(), nothing you paste here is ever sent to a server, which matters if the payload contains real API keys, tokens, or customer data.",
+      whenToUse:
+        "The most common case is debugging: you copy a response body out of your browser's network tab or a server log, and it's one unreadable line. Pasting it here turns it into a structure you can actually scan for the field that's wrong. It's also useful before committing a config file — many build tools (package.json, tsconfig.json, API schemas) are strict about JSON syntax, and catching a trailing comma here is faster than waiting for a build to fail. Teams also use it to normalize formatting before a code review, so a diff shows only the actual data change instead of noisy whitespace differences.",
+      howItWorks:
+        "Under the hood, the tool calls the browser's native JSON.parse() on your input, which either succeeds and gives back a JavaScript object, or throws a syntax error with a position in the string. On success, JSON.stringify() re-serializes that object with your chosen indent width (2 or 4 spaces). This round-trip through parse-then-stringify is what both validates and reformats in one step — it's the same approach any JSON tool uses, since JSON.parse() is intentionally strict about the spec (unlike JavaScript object literals, real JSON doesn't allow trailing commas, single quotes, or unquoted keys).",
+      faqs: [
+        {
+          question: "Is it safe to paste API keys or tokens into this JSON formatter?",
+          answer:
+            "Yes — this tool runs entirely client-side in your browser. Nothing you type or paste is transmitted to any server; the formatting and validation happen locally using your browser's built-in JSON parser.",
+        },
+        {
+          question: "Why does my JSON fail to format even though it looks correct?",
+          answer:
+            "The most common causes are trailing commas after the last item in an object or array, single quotes instead of double quotes around strings, and unquoted object keys — all valid in JavaScript object literals but not in strict JSON. The error message will point to roughly where parsing failed.",
+        },
+        {
+          question: "What's the difference between formatting and minifying JSON?",
+          answer:
+            "Formatting (beautifying) adds indentation and line breaks to make JSON readable by humans. Minifying strips all unnecessary whitespace to make the payload as small as possible for transmission. This tool does both — use Minify when you need to shrink a payload, and the default formatted view when you need to read it.",
+        },
+        {
+          question: "Can I convert the formatted JSON to another format?",
+          answer:
+            "Yes — if you need YAML, CSV, or a JSON Schema instead, this site also has dedicated JSON to YAML, CSV to JSON, and JSON Schema Generator tools that accept the same input.",
+        },
+      ],
+    },
   },
   {
     slug: "base64-encoder-decoder",
@@ -56,10 +142,43 @@ export const tools: ToolConfig[] = [
     description:
       "Convert plain text to Base64 or decode a Base64 string back to readable text, with UTF-8 support and instant error feedback on invalid input.",
     category: "encoding",
-    keywords: ["base64", "encode", "decode", "atob", "btoa"],
+    keywords: ["base64 encode", "base64 decode", "base64 converter", "atob btoa online"],
     exampleInput: "Hello, world!",
     exampleOutput: "SGVsbG8sIHdvcmxkIQ==",
     component: dynamic(() => import("@/components/tools/base64-encoder-decoder")),
+    seo: {
+      seoTitle: "Base64 Encode & Decode — Free Online Converter",
+      seoDescription:
+        "Encode text to Base64 or decode Base64 back to plain text instantly. Full UTF-8 support for emoji and non-English characters. Runs entirely in your browser.",
+      intro:
+        "Base64 is a way of representing binary or text data using only 64 printable ASCII characters (A-Z, a-z, 0-9, +, /). It doesn't compress or encrypt anything — it just re-encodes data into a format that's safe to put inside places that don't handle raw binary well, like email bodies, URLs, JSON strings, or HTML attributes. This tool converts text to Base64 and back, with proper UTF-8 handling so accented characters and emoji round-trip correctly, which is a common source of bugs in simpler Base64 tools that only handle plain ASCII.",
+      whenToUse:
+        "You'll run into Base64 most often when embedding a small image directly in CSS or HTML as a data URI, decoding the payload of a JWT to inspect it, reading Basic Auth credentials out of an HTTP Authorization header, or debugging why an API is sending back a garbled string that turns out to just be Base64-encoded JSON. It's also common when working with email (MIME attachments are Base64-encoded) or when a config file stores a binary secret as text.",
+      howItWorks:
+        "Encoding works by taking your text's UTF-8 byte representation and mapping every group of 3 bytes to 4 Base64 characters, using padding (=) when the input isn't a multiple of 3 bytes. This tool uses the browser's built-in btoa()/atob() functions, but wraps them with encodeURIComponent/decodeURIComponent so multi-byte UTF-8 characters (like emoji or accented letters) don't break — a raw btoa() call alone will throw or corrupt data on anything outside the Latin1 range, which is the most common bug people hit when Base64-encoding by hand.",
+      faqs: [
+        {
+          question: "Is Base64 the same as encryption?",
+          answer:
+            "No. Base64 is an encoding scheme, not encryption — anyone can decode it instantly with no key or password. Never use Base64 alone to protect sensitive data; use it purely for safely representing data as text, and use actual encryption (like AES) if you need confidentiality.",
+        },
+        {
+          question: "Why does my Base64 string end with one or two = signs?",
+          answer:
+            "The = characters are padding. Base64 encodes data in 3-byte chunks; if your original input isn't a multiple of 3 bytes, padding is added so the output length stays a multiple of 4 characters. One = means the input had 2 bytes left over, two = means 1 byte was left over.",
+        },
+        {
+          question: "Why did decoding my Base64 string fail or produce garbage?",
+          answer:
+            "The most common cause is that the string isn't actually Base64 — for example, it's URL-safe Base64 (which uses - and _ instead of + and /), or it has line breaks or extra whitespace mixed in. Strip whitespace and swap URL-safe characters back before decoding.",
+        },
+        {
+          question: "Can I Base64-encode an image, not just text?",
+          answer:
+            "Yes, but for images specifically this site has a dedicated Image to Base64 Converter that handles binary image data and produces a ready-to-use data:image/... URI, which is more convenient than converting through plain text.",
+        },
+      ],
+    },
   },
   {
     slug: "password-generator",
@@ -68,10 +187,43 @@ export const tools: ToolConfig[] = [
     description:
       "Generate cryptographically random passwords with adjustable length and character sets, along with a quick strength indicator.",
     category: "security",
-    keywords: ["password", "generator", "random", "security", "strength"],
+    keywords: ["password generator", "strong password generator", "random password online", "secure password"],
     exampleInput: "Length: 16, symbols on",
     exampleOutput: "k8#Lm2$Xr9!qPz4W",
     component: dynamic(() => import("@/components/tools/password-generator")),
+    seo: {
+      seoTitle: "Password Generator — Free Strong & Secure Passwords",
+      seoDescription:
+        "Generate strong, random passwords with adjustable length and character sets. Cryptographically secure, with a live strength meter. Nothing is stored or transmitted.",
+      intro:
+        "A password generator creates random passwords that are hard to guess and resistant to the automated cracking techniques attackers actually use — dictionary attacks (trying real words and common substitutions) and brute-force attacks (trying every possible combination). The strength of a random password comes almost entirely from length and character variety: a longer password drawn from a larger character set has exponentially more possible combinations for an attacker to search through, which is why this tool lets you control both independently rather than just picking a fixed length.",
+      whenToUse:
+        "Use a generated password any time you're creating a new account, especially for anything tied to money, email recovery, or admin access — these are the accounts attackers target first, because compromising them often unlocks everything else. It's also the right tool when setting a database or service password during deployment, since a memorable password is a weak password by definition, and a password manager (not your memory) should be holding onto the result anyway.",
+      howItWorks:
+        "The generator uses crypto.getRandomValues(), the browser's cryptographically secure random number source, to pick each character — not Math.random(), which is faster but not designed to resist prediction and shouldn't be used for anything security-related. Each character is drawn independently and uniformly from whichever character sets you've enabled (lowercase, uppercase, numbers, symbols), so the strength meter reflects the actual combinatorial size of the password space: more enabled sets and more length both directly increase how long a brute-force attack would take.",
+      faqs: [
+        {
+          question: "How long should a strong password be?",
+          answer:
+            "At least 12 characters is a reasonable modern minimum, and 16+ is better if the site allows it. Length matters more than complexity — a 20-character password using only lowercase letters is generally harder to brute-force than an 8-character password mixing every character type.",
+        },
+        {
+          question: "Is it safe to generate my password in a browser tool like this?",
+          answer:
+            "Yes, as long as the tool generates it client-side and never transmits it — which is the case here. The password is created and shown entirely in your browser using the Web Crypto API, and nothing is logged, stored, or sent to any server.",
+        },
+        {
+          question: "Should I reuse a strong password across multiple sites?",
+          answer:
+            "No — even a very strong password should be unique per site. If one service you use suffers a data breach, reused passwords let attackers immediately try that same password on your other accounts (called credential stuffing). Use a password manager to generate and store a different strong password for every account.",
+        },
+        {
+          question: "Do I need symbols in my password, or are letters and numbers enough?",
+          answer:
+            "Symbols add some entropy but the bigger factor is always length. If a site restricts symbols or you want something slightly easier to type, a longer letters-and-numbers password is a reasonable tradeoff — this tool's strength meter will show you the practical difference as you toggle character sets.",
+        },
+      ],
+    },
   },
   {
     slug: "word-counter",
@@ -104,10 +256,38 @@ export const tools: ToolConfig[] = [
     description:
       "Pick a color or type a HEX/RGB value to instantly see it converted, plus a live preview swatch.",
     category: "color",
-    keywords: ["color", "hex", "rgb", "converter", "picker"],
+    keywords: ["hex to rgb converter", "rgb to hex", "color code converter", "css color picker"],
     exampleInput: "#3B82F6",
     exampleOutput: "rgb(59, 130, 246)",
     component: dynamic(() => import("@/components/tools/hex-rgb-converter")),
+    seo: {
+      seoTitle: "HEX to RGB Converter — Free Online Color Code Tool",
+      seoDescription:
+        "Convert colors between HEX and RGB instantly with a live preview swatch. Pick a color visually or type a code directly. No signup required.",
+      intro:
+        "HEX and RGB are two different ways of writing down the exact same color information for use in CSS, design tools, and image editors. HEX (like #3B82F6) packs red, green, and blue values into a six-digit hexadecimal string, while RGB (like rgb(59, 130, 246)) writes those same three values out as plain decimal numbers from 0-255. Neither format is more 'correct' — different tools and codebases just have different conventions, and this converter exists because you'll regularly need to translate between them (a design tool exports HEX, but a JavaScript animation library expects RGB values you can interpolate between, for example).",
+      whenToUse:
+        "This comes up constantly in frontend work: a designer hands you a HEX code from Figma, but you're writing JavaScript that needs individual R, G, B channels to calculate opacity or blend colors. Or the reverse — you're reading a color out of a canvas pixel (which gives RGB) and need to write it into a CSS class as HEX. It's also useful for quickly sanity-checking a color value someone sent you looks like what you expect, using the live swatch preview.",
+      howItWorks:
+        "Converting HEX to RGB is base conversion: each pair of hex digits (00-FF) represents one color channel and converts directly to its decimal equivalent (0-255) — for example, hex 3B is 59 in decimal, which becomes the red value in rgb(59, 130, 246). Converting the other direction reverses this, formatting each decimal channel value back into two-digit hexadecimal and concatenating them with a # prefix. This is exact, lossless math in both directions — there's no rounding or approximation, since both formats represent the same underlying 24-bit color value.",
+      faqs: [
+        {
+          question: "Why do some HEX codes have 3 digits and others have 6?",
+          answer:
+            "A 3-digit HEX code (like #3BF) is shorthand where each digit is doubled to form the full 6-digit value (#33BBFF) — it only works when both digits in each channel pair are identical. Most colors need the full 6-digit form; the 3-digit shorthand is just a CSS convenience for colors that happen to fit the pattern.",
+        },
+        {
+          question: "What's the difference between RGB and RGBA?",
+          answer:
+            "RGBA adds a fourth value — alpha — controlling transparency, from 0 (fully transparent) to 1 (fully opaque). Plain RGB and HEX have no transparency information; if you need to convert a color that includes opacity, you'll need the RGBA or 8-digit HEX (#RRGGBBAA) format specifically.",
+        },
+        {
+          question: "Can I convert HEX or RGB to HSL instead?",
+          answer:
+            "This tool focuses on HEX/RGB conversion, but the Palette Generator tool on this site works internally with HSL and can help you explore related shades, tints, and complementary colors from a base HEX value.",
+        },
+      ],
+    },
   },
   {
     slug: "markdown-preview",
@@ -128,10 +308,43 @@ export const tools: ToolConfig[] = [
     description:
       "Generate a downloadable QR code from any text, link, or contact detail, rendered entirely in your browser.",
     category: "generators",
-    keywords: ["qr code", "generator", "barcode", "scan"],
+    keywords: ["qr code generator", "free qr code maker", "generate qr code online", "qr code from url"],
     exampleInput: "https://example.com",
     exampleOutput: "Scannable QR code image",
     component: dynamic(() => import("@/components/tools/qr-code-generator")),
+    seo: {
+      seoTitle: "QR Code Generator — Free, No Signup, Downloadable PNG",
+      seoDescription:
+        "Turn any URL or text into a scannable QR code instantly. Adjustable size, downloadable as PNG, generated entirely in your browser with no expiry or tracking.",
+      intro:
+        "A QR code is a two-dimensional barcode that encodes text data — most often a URL — into a pattern of black and white squares that any smartphone camera can scan and decode instantly. Unlike some QR code generators that route the scanned URL through their own redirect service (so they can track scans, and which can break if the service ever shuts down), this tool encodes your data directly into the QR code itself with no intermediary, no expiry, and no tracking.",
+      whenToUse:
+        "QR codes are useful anywhere you need to bridge a physical object or space to a digital destination: printed on a business card or flyer linking to a website, on packaging linking to setup instructions, on a poster linking to an event registration form, or for quickly transferring a Wi-Fi password or contact card to a phone without typing it manually. They're also commonly used in restaurants for digital menus and in presentations to let an audience quickly open a link without typing a URL.",
+      howItWorks:
+        "QR code generation follows the QR code specification (ISO/IEC 18004), which encodes your input text using one of several error-correction levels — meaning the code remains scannable even if part of it is damaged, obscured, or poorly printed, since redundant data is built into the pattern. This tool generates the code entirely client-side in your browser using a JavaScript QR encoding library, then renders it to canvas so you can download it as a PNG — your URL or text never leaves your device or gets sent to any server in the process.",
+      faqs: [
+        {
+          question: "Do QR codes generated by this tool expire?",
+          answer:
+            "No. Because the data is encoded directly into the QR code pattern with no redirect service in between, the code will keep working for as long as the underlying URL or content it points to remains valid — there's no expiration built into the QR code itself.",
+        },
+        {
+          question: "What's the maximum amount of text a QR code can hold?",
+          answer:
+            "It depends on the QR code's version (size) and error-correction level, but a standard QR code can hold roughly up to 4,000 alphanumeric characters or about 3,000 bytes of binary data. In practice, shorter content (like a URL) produces a simpler, more reliably scannable code.",
+        },
+        {
+          question: "Can I use a generated QR code for commercial printing?",
+          answer:
+            "Yes — download the PNG at a large enough size for your print resolution. For print use, generate the code larger than you think you need (higher pixel dimensions), since scaling a small QR code up can introduce blur that hurts scannability.",
+        },
+        {
+          question: "Why won't my QR code scan?",
+          answer:
+            "The most common causes are insufficient contrast (light gray on white, for example), the code being too small relative to the scanning distance, or damage/obstruction covering one of the three corner alignment squares. Try increasing the size and testing with your phone's actual camera app before finalizing.",
+        },
+      ],
+    },
   },
   {
     slug: "unix-timestamp-converter",
@@ -140,10 +353,43 @@ export const tools: ToolConfig[] = [
     description:
       "Convert a Unix timestamp to a human-readable date, or a date back into seconds/milliseconds since epoch, with your local timezone shown alongside UTC.",
     category: "date-time",
-    keywords: ["unix", "timestamp", "epoch", "date", "converter"],
+    keywords: ["unix timestamp converter", "epoch converter", "timestamp to date", "unix time online"],
     exampleInput: "1735689600",
     exampleOutput: "Wed, 01 Jan 2025 00:00:00 UTC",
     component: dynamic(() => import("@/components/tools/unix-timestamp-converter")),
+    seo: {
+      seoTitle: "Unix Timestamp Converter — Epoch to Date, Free Online",
+      seoDescription:
+        "Convert Unix timestamps to human-readable dates and back, in UTC and your local timezone. Instant, accurate, no signup required.",
+      intro:
+        "A Unix timestamp (also called epoch time) is a single number representing a point in time: the number of seconds that have elapsed since January 1, 1970, 00:00:00 UTC — an arbitrary reference point chosen when Unix systems were first designed. Computers store and compare dates as timestamps because a single number is trivial to sort, compare, and do arithmetic on, unlike a formatted date string. This tool converts between that raw number and a readable date, showing both UTC and your local timezone side by side, since timestamp values are always in UTC but you usually want to read them in your own timezone.",
+      whenToUse:
+        "You'll hit Unix timestamps constantly when reading API responses (created_at or expires_at fields are very often returned as raw epoch numbers), debugging why a JWT's exp claim seems wrong, setting up a cron job or scheduled task where you need to reason about specific future times, or querying a database where date columns are stored as timestamps. It's also useful when a log file shows raw timestamps and you need to quickly figure out what time an event actually happened.",
+      howItWorks:
+        "Converting a timestamp to a date is simple multiplication and JavaScript's built-in Date object: seconds-since-epoch × 1000 gives milliseconds-since-epoch, which is what JavaScript's new Date() constructor expects. Converting the other direction — a picked date back to a timestamp — uses Date.getTime() and divides by 1000. The tricky part users usually run into isn't the math, it's units: some systems (like JavaScript itself) use milliseconds since epoch, while Unix and most backend systems use seconds — this tool shows both explicitly so you don't have to guess which one an API expects.",
+      faqs: [
+        {
+          question: "Is a Unix timestamp in seconds or milliseconds?",
+          answer:
+            "Traditionally, Unix timestamps are in seconds — that's the original Unix/POSIX standard. However, JavaScript's Date.now() and many modern APIs use milliseconds instead. If a timestamp looks unexpectedly large (13 digits instead of 10), it's very likely milliseconds, not seconds.",
+        },
+        {
+          question: "Why is the date shown different between UTC and my local time?",
+          answer:
+            "A Unix timestamp represents one universal moment in time, but that same moment corresponds to different clock times depending on timezone — 00:00 UTC is a different local hour almost everywhere else in the world. This tool shows both so you can see exactly how the timestamp maps to your own timezone.",
+        },
+        {
+          question: "What happens when Unix timestamps run out in 2038?",
+          answer:
+            "This is the '2038 problem' — systems that store timestamps as a 32-bit signed integer will overflow on January 19, 2038, wrapping around to a negative number. Modern systems use 64-bit integers for timestamps, which pushes the same limit out roughly 292 billion years, so this only affects older 32-bit systems.",
+        },
+        {
+          question: "Can Unix timestamps represent dates before 1970?",
+          answer:
+            "Yes, as negative numbers — a timestamp of -86400, for example, represents December 31, 1969. Most modern systems and this tool handle negative timestamps correctly, though some older or stricter systems may not.",
+        },
+      ],
+    },
   },
   {
     slug: "slug-generator",
@@ -212,10 +458,43 @@ export const tools: ToolConfig[] = [
     description:
       "Hash any text using the browser's built-in Web Crypto API and compare SHA-1, SHA-256, SHA-384, and SHA-512 digests side by side.",
     category: "security",
-    keywords: ["hash", "sha256", "sha1", "sha512", "checksum"],
+    keywords: ["sha256 generator", "hash generator online", "sha1 sha512 checksum", "text hash calculator"],
     exampleInput: "hello world",
     exampleOutput: "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde",
     component: dynamic(() => import("@/components/tools/hash-generator")),
+    seo: {
+      seoTitle: "SHA-256 & Hash Generator — Free Online SHA-1/256/384/512",
+      seoDescription:
+        "Generate SHA-1, SHA-256, SHA-384, and SHA-512 hashes from any text instantly, side by side. Runs entirely in your browser via the Web Crypto API.",
+      intro:
+        "A cryptographic hash function takes any input — a word, a file, a whole document — and produces a fixed-length string of characters (the hash, or digest) that's unique to that exact input. Change even one character of the input and the entire hash output changes completely and unpredictably. Hashing is one-way: you can't reverse a hash back into the original text, which is exactly what makes it useful for verifying data integrity and, with proper additional steps, storing passwords without keeping the plaintext.",
+      whenToUse:
+        "Hashes are used to verify a downloaded file wasn't corrupted or tampered with (comparing the published SHA-256 checksum against the one you compute locally), to generate a consistent cache key or content fingerprint for a piece of text, and to check whether two pieces of text are identical without comparing them character by character. This tool is not for hashing passwords for storage — for that specific case, use the dedicated bcrypt tool, since general-purpose hash functions like SHA-256 are deliberately fast, which makes them unsuitable for password storage where you actually want hashing to be slow.",
+      howItWorks:
+        "This tool calls crypto.subtle.digest(), part of the browser's built-in Web Crypto API, which computes the hash using the same underlying algorithms (SHA-1, SHA-256, SHA-384, SHA-512) as any server-side implementation — there's no custom or simplified hashing logic here, so results match exactly what you'd get from command-line tools like sha256sum or a backend language's crypto library. The text is first encoded to UTF-8 bytes, then digested, then the resulting bytes are converted to a lowercase hexadecimal string, which is the standard way hash digests are displayed.",
+      faqs: [
+        {
+          question: "Which hash algorithm should I use — SHA-1, SHA-256, or SHA-512?",
+          answer:
+            "SHA-1 is considered cryptographically broken and shouldn't be used for security purposes anymore, though it still appears in some legacy systems. SHA-256 is the current standard for most use cases (file checksums, Git commit hashes, general integrity checks). SHA-512 offers a larger output and is used where slightly higher security margins matter, at a small performance cost.",
+        },
+        {
+          question: "Why isn't MD5 included in this tool?",
+          answer:
+            "MD5 isn't supported by the browser's built-in Web Crypto API, and it's also cryptographically broken — collisions (two different inputs producing the same hash) have been demonstrated in practice, so it shouldn't be relied on for security-sensitive uses regardless.",
+        },
+        {
+          question: "Can I use a SHA-256 hash to store user passwords?",
+          answer:
+            "Not safely on its own. General-purpose hashes like SHA-256 are fast by design, which means an attacker with a leaked hash database can try billions of password guesses per second. Password-specific algorithms like bcrypt are deliberately slow and include salting, which is why they're the correct choice for password storage — this site has a dedicated bcrypt tool for that.",
+        },
+        {
+          question: "Will hashing the same text twice always produce the same result?",
+          answer:
+            "Yes — hash functions are deterministic. The exact same input will always produce the exact same output hash, which is precisely what makes them useful for verifying that two pieces of data are identical.",
+        },
+      ],
+    },
   },
   {
     slug: "password-strength-checker",
@@ -248,10 +527,43 @@ export const tools: ToolConfig[] = [
     description:
       "Write a regular expression and test string to see live-highlighted matches and capture groups as you type.",
     category: "regex",
-    keywords: ["regex", "regular expression", "pattern", "tester"],
+    keywords: ["regex tester", "regular expression tester", "test regex online", "regex match highlighter"],
     exampleInput: "\\b[\\w.-]+@[\\w.-]+\\.\\w+\\b",
     exampleOutput: "hello@example.com",
     component: dynamic(() => import("@/components/tools/regex-tester")),
+    seo: {
+      seoTitle: "Regex Tester — Test Regular Expressions Online Free",
+      seoDescription:
+        "Test regular expressions against real text with live match highlighting and capture group inspection. Supports all standard JavaScript regex flags.",
+      intro:
+        "A regex tester lets you write a regular expression pattern and immediately see, against real sample text, exactly what it matches — highlighted inline, with capture groups broken out separately. This matters because regex is notoriously hard to get right on the first try: a pattern that looks correct can silently match too much, too little, or the wrong part of a string, and the only reliable way to catch that is to test it against real examples rather than reason about it purely in your head.",
+      whenToUse:
+        "Reach for a regex tester when validating user input (emails, phone numbers, postal codes), extracting a specific piece of data out of log lines or scraped text, writing a find-and-replace pattern before running it against a real codebase, or debugging why a regex in production isn't matching something it should. Testing here first — before pasting a pattern into code — catches mistakes like unescaped special characters or wrong quantifiers without needing to run and re-run your actual program.",
+      howItWorks:
+        "This tool runs your pattern through JavaScript's native RegExp engine — the same engine your pattern will actually run on if you're writing JavaScript or TypeScript — and calls exec() repeatedly to find every match in the test string, highlighting each one and listing out any capture groups (the parts of your pattern wrapped in parentheses). The global (g) flag is automatically applied so every match is found, not just the first one, matching how most real-world regex usage (like String.replace with a global pattern) actually behaves.",
+      faqs: [
+        {
+          question: "Why does my regex work in this tester but not in my code?",
+          answer:
+            "The most common cause is flags — check that your code applies the same flags (g, i, m, etc.) shown here. Another common cause is escaping: if your pattern is inside a string literal in your code, backslashes may need to be doubled (e.g., \\\\d instead of \\d) depending on the language.",
+        },
+        {
+          question: "What do the capture groups shown below the matches mean?",
+          answer:
+            "Any part of your pattern wrapped in parentheses — like (\\\\w+) — becomes a capture group, and its matched text is shown separately for each full match. Capture groups are commonly used to extract specific pieces of data, like pulling the domain out of an email match, or referenced in replacements as $1, $2, and so on.",
+        },
+        {
+          question: "What's the difference between greedy and lazy quantifiers?",
+          answer:
+            "A greedy quantifier like * or + matches as much text as possible before backing off if needed. A lazy quantifier — the same symbol followed by a ? like *? — matches as little as possible instead. This matters most with patterns like <.*> against HTML, where greedy matching can span across multiple tags unintentionally.",
+        },
+        {
+          question: "Can I use this to test find-and-replace patterns, not just matching?",
+          answer:
+            "This tool is focused on match testing and highlighting. For testing an actual find-and-replace with capture group references in the replacement text, this site also has a dedicated Regex Find & Replace tool.",
+        },
+      ],
+    },
   },
   {
     slug: "json-yaml-converter",
@@ -380,10 +692,43 @@ export const tools: ToolConfig[] = [
     description:
       "Paste a JSON Web Token to decode its header and payload without needing the signing key. Doesn't verify signatures.",
     category: "developer",
-    keywords: ["jwt", "json web token", "decoder", "auth"],
+    keywords: ["jwt decoder", "decode json web token", "jwt debugger online", "jwt payload viewer"],
     exampleInput: "eyJhbGciOiJIUzI1NiJ9...",
     exampleOutput: '{"sub": "1234567890", "name": "Ada Lovelace"}',
     component: dynamic(() => import("@/components/tools/jwt-decoder")),
+    seo: {
+      seoTitle: "JWT Decoder — Free Online JSON Web Token Debugger",
+      seoDescription:
+        "Decode a JWT's header and payload instantly without needing the signing key. See claims, expiry, and algorithm at a glance. Runs entirely in your browser.",
+      intro:
+        "A JSON Web Token (JWT) is a compact, URL-safe string used to represent claims between two parties — most commonly, proof that a user is authenticated. It's made of three Base64URL-encoded parts separated by dots: a header (describing the signing algorithm), a payload (the actual claims, like user ID and expiry), and a signature (proving the token wasn't tampered with). This tool decodes the header and payload so you can read what's actually inside a token — it deliberately does not and cannot verify the signature, since that requires the secret or public key the token was signed with, which this tool never asks for or sees.",
+      whenToUse:
+        "This is the tool you reach for when debugging authentication — a login isn't working, an API is rejecting a token as expired, or you need to confirm which claims (user ID, roles, expiry timestamp) are actually embedded in a token you're working with. It's also useful when integrating with a third-party auth provider and you want to sanity-check the shape of the tokens they're issuing before writing code against them.",
+      howItWorks:
+        "JWTs use Base64URL encoding (a variant of Base64 that's safe to put directly in a URL, using - and _ instead of + and /) for the header and payload sections. This tool splits the token on its dots, Base64URL-decodes the first two segments, and pretty-prints the resulting JSON. The third segment (the signature) is intentionally left alone and unverified — decoding a JWT tells you what it claims, not whether those claims are trustworthy, which is why treating a decoded-but-unverified token as authenticated in your own code is a serious security mistake.",
+      faqs: [
+        {
+          question: "Is it safe to paste a real JWT into this decoder?",
+          answer:
+            "Decoding happens entirely in your browser, so the token itself isn't transmitted anywhere. That said, JWTs often contain sensitive claims, so treat them the same way you'd treat any credential — avoid pasting production tokens into any tool, including this one, if you can reproduce the issue with a test token instead.",
+        },
+        {
+          question: "Why can't this tool verify if my JWT signature is valid?",
+          answer:
+            "Verifying a signature requires the secret key (for HMAC algorithms like HS256) or public key (for RSA/ECDSA algorithms) the token was signed with — something only the issuing server should have. A tool that could verify any signature without that key would mean the signing scheme isn't actually secure.",
+        },
+        {
+          question: "What does the 'exp' claim in my JWT payload mean?",
+          answer:
+            "exp is the standard claim for expiration time, given as a Unix timestamp (seconds since 1970). If the current time is past this value, the token is expired and a properly implemented server should reject it regardless of whether the signature is still valid.",
+        },
+        {
+          question: "Why does my decoded JWT payload look different from what I expected?",
+          answer:
+            "Double-check you're decoding the actual token string and not a wrapped version of it (some APIs prefix tokens with \"Bearer \" in headers — that prefix isn't part of the token itself and needs to be stripped first).",
+        },
+      ],
+    },
   },
   {
     slug: "image-compressor",
