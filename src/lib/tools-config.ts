@@ -12,6 +12,111 @@
 import { ComponentType } from "react";
 import dynamic from "next/dynamic";
 
+// Approximate last-modified date per tool, used for sitemap <lastmod> accuracy.
+// Reflects the batch each tool was added in (or last had its content genuinely
+// updated) rather than a single build-time timestamp shared by every URL.
+export const TOOL_LAST_MODIFIED: Record<string, string> = {
+  "uuid-generator": "2026-08-02",
+  "json-formatter": "2026-08-02",
+  "base64-encoder-decoder": "2026-08-02",
+  "password-generator": "2026-08-02",
+  "word-counter": "2026-07-29",
+  "case-converter": "2026-07-29",
+  "hex-rgb-converter": "2026-08-02",
+  "markdown-preview": "2026-07-29",
+  "qr-code-generator": "2026-08-02",
+  "unix-timestamp-converter": "2026-08-02",
+  "slug-generator": "2026-07-30",
+  "lorem-ipsum-generator": "2026-07-30",
+  "line-cleaner": "2026-07-30",
+  "url-encoder-decoder": "2026-07-30",
+  "html-encoder-decoder": "2026-07-30",
+  "hash-generator": "2026-08-02",
+  "password-strength-checker": "2026-07-30",
+  "percentage-calculator": "2026-07-30",
+  "regex-tester": "2026-08-02",
+  "json-yaml-converter": "2026-07-30",
+  "json-compare": "2026-07-30",
+  "box-shadow-generator": "2026-07-30",
+  "border-radius-generator": "2026-07-30",
+  "gradient-generator": "2026-07-30",
+  "number-base-converter": "2026-07-30",
+  "http-status-explorer": "2026-07-30",
+  "mime-type-finder": "2026-07-30",
+  "time-zone-converter": "2026-07-30",
+  "random-number-generator": "2026-07-30",
+  "jwt-decoder": "2026-08-02",
+  "image-compressor": "2026-07-31",
+  "image-resizer": "2026-07-31",
+  "image-format-converter": "2026-07-31",
+  "svg-viewer": "2026-07-31",
+  "flexbox-generator": "2026-07-31",
+  "grid-generator": "2026-07-31",
+  "clamp-generator": "2026-07-31",
+  "sql-formatter": "2026-07-31",
+  "fake-user-generator": "2026-07-31",
+  "nano-id-generator": "2026-07-31",
+  "palette-generator": "2026-07-31",
+  "image-cropper": "2026-07-31",
+  "json-viewer": "2026-07-31",
+  "markdown-html-converter": "2026-07-31",
+  "regex-cheat-sheet": "2026-07-31",
+  "sql-minifier": "2026-07-31",
+  "age-calculator": "2026-07-31",
+  "date-difference-calculator": "2026-07-31",
+  "bcrypt-generator": "2026-07-31",
+  "glassmorphism-generator": "2026-07-31",
+  "html-minifier-beautifier": "2026-08-01",
+  "js-minifier": "2026-08-01",
+  "js-beautifier": "2026-08-01",
+  "totp-generator": "2026-08-01",
+  "unit-converter": "2026-08-01",
+  "pomodoro-timer": "2026-08-01",
+  "ip-subnet-calculator": "2026-08-01",
+  "user-agent-parser": "2026-08-01",
+  "api-request-builder": "2026-08-01",
+  "text-diff-checker": "2026-08-01",
+  "color-contrast-checker": "2026-08-01",
+  "bmi-calculator": "2026-08-01",
+  "tip-calculator": "2026-08-01",
+  "data-size-converter": "2026-08-01",
+  "roman-numeral-converter": "2026-08-01",
+  "markdown-table-generator": "2026-08-01",
+  "url-parser": "2026-08-01",
+  "credit-card-validator": "2026-08-01",
+  "passphrase-generator": "2026-08-01",
+  "csv-json-converter": "2026-08-01",
+  "cron-builder": "2026-08-01",
+  "cubic-bezier-generator": "2026-08-01",
+  "text-shadow-generator": "2026-08-01",
+  "random-color-generator": "2026-08-01",
+  "prime-checker": "2026-08-01",
+  "factorial-calculator": "2026-08-01",
+  "word-frequency-counter": "2026-08-01",
+  "markdown-cheat-sheet": "2026-08-01",
+  "loan-calculator": "2026-08-01",
+  "image-watermark": "2026-08-01",
+  "image-base64-converter": "2026-08-01",
+  "favicon-generator": "2026-08-01",
+  "regex-replace": "2026-08-01",
+  "text-reverser": "2026-08-01",
+  "palindrome-checker": "2026-08-01",
+  "uuid-validator": "2026-08-01",
+  "color-blindness-simulator": "2026-08-01",
+  "meta-tag-generator": "2026-08-01",
+  "number-to-words": "2026-08-01",
+  "morse-code-translator": "2026-08-01",
+  "binary-text-converter": "2026-08-02",
+  "caesar-cipher": "2026-08-02",
+  "fancy-text-generator": "2026-08-02",
+  "color-name-finder": "2026-08-02",
+  "json-schema-generator": "2026-08-02",
+  "text-truncator": "2026-08-02",
+  "whitespace-visualizer": "2026-08-02",
+  "css-specificity-calculator": "2026-08-02",
+  "barcode-generator": "2026-08-02",
+};
+
 export interface ToolFaq {
   question: string;
   answer: string;
@@ -1562,6 +1667,11 @@ export const tools: ToolConfig[] = [
 
 export function getTool(slug: string): ToolConfig | undefined {
   return tools.find((t) => t.slug === slug);
+}
+
+/** Returns the tool's tracked last-modified date, or today's date as a safe fallback. */
+export function getToolLastModified(slug: string): string {
+  return TOOL_LAST_MODIFIED[slug] ?? new Date().toISOString().slice(0, 10);
 }
 
 export function getToolsByCategory(categorySlug: string): ToolConfig[] {
