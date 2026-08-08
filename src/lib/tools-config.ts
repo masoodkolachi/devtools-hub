@@ -20,20 +20,20 @@ export const TOOL_LAST_MODIFIED: Record<string, string> = {
   "json-formatter": "2026-08-02",
   "base64-encoder-decoder": "2026-08-02",
   "password-generator": "2026-08-02",
-  "word-counter": "2026-07-29",
-  "case-converter": "2026-07-29",
+  "word-counter": "2026-08-10",
+  "case-converter": "2026-08-10",
   "hex-rgb-converter": "2026-08-02",
-  "markdown-preview": "2026-07-29",
+  "markdown-preview": "2026-08-10",
   "qr-code-generator": "2026-08-02",
   "unix-timestamp-converter": "2026-08-02",
   "slug-generator": "2026-07-30",
-  "lorem-ipsum-generator": "2026-07-30",
-  "line-cleaner": "2026-07-30",
-  "url-encoder-decoder": "2026-07-30",
-  "html-encoder-decoder": "2026-07-30",
+  "lorem-ipsum-generator": "2026-08-10",
+  "line-cleaner": "2026-08-10",
+  "url-encoder-decoder": "2026-08-10",
+  "html-encoder-decoder": "2026-08-10",
   "hash-generator": "2026-08-02",
   "password-strength-checker": "2026-07-30",
-  "percentage-calculator": "2026-07-30",
+  "percentage-calculator": "2026-08-10",
   "regex-tester": "2026-08-02",
   "json-yaml-converter": "2026-07-30",
   "json-compare": "2026-07-30",
@@ -64,7 +64,7 @@ export const TOOL_LAST_MODIFIED: Record<string, string> = {
   "sql-minifier": "2026-07-31",
   "age-calculator": "2026-07-31",
   "date-difference-calculator": "2026-07-31",
-  "bcrypt-generator": "2026-07-31",
+  "bcrypt-generator": "2026-08-10",
   "glassmorphism-generator": "2026-07-31",
   "html-minifier-beautifier": "2026-08-01",
   "js-minifier": "2026-08-01",
@@ -85,7 +85,7 @@ export const TOOL_LAST_MODIFIED: Record<string, string> = {
   "url-parser": "2026-08-01",
   "credit-card-validator": "2026-08-01",
   "passphrase-generator": "2026-08-01",
-  "csv-json-converter": "2026-08-01",
+  "csv-json-converter": "2026-08-10",
   "cron-builder": "2026-08-01",
   "cubic-bezier-generator": "2026-08-01",
   "text-shadow-generator": "2026-08-01",
@@ -337,10 +337,38 @@ export const tools: ToolConfig[] = [
     description:
       "Paste any text to instantly see word count, character count, sentence count, and estimated reading time.",
     category: "text",
-    keywords: ["word count", "character count", "text", "reading time"],
+    keywords: ["word counter", "character counter online", "word count tool", "reading time calculator"],
     exampleInput: "The quick brown fox jumps over the lazy dog.",
     exampleOutput: "9 words · 44 characters",
     component: dynamic(() => import("@/components/tools/word-counter")),
+    seo: {
+      seoTitle: "Word Counter — Count Words, Characters & Reading Time",
+      seoDescription:
+        "Count words, characters, sentences, and paragraphs instantly, plus estimated reading time. Paste any text — essays, posts, scripts — for a live breakdown.",
+      intro:
+        "A word counter analyzes a block of text and breaks it down into concrete metrics: word count, character count (with and without spaces), sentence count, paragraph count, and an estimated reading time. These numbers matter more than they might seem — many platforms and formats have hard or soft limits (a tweet, a meta description, a college essay's minimum word count, a video script's target runtime), and eyeballing whether you're close to a limit is unreliable once text gets past a paragraph or two.",
+      whenToUse:
+        "Writers use this to check an essay or article against a required word count, marketers use it to keep meta descriptions and social posts within platform character limits, and content creators use the reading-time estimate to gauge how long a blog post or documentation page will take a typical reader to get through. It's also useful for tightening writing — watching the word count drop as you cut filler is a quick, concrete way to see whether an edit actually made a piece shorter.",
+      howItWorks:
+        "Word count splits the text on whitespace and counts the resulting chunks. Character counts are a direct string length, calculated both including and excluding spaces. Sentence count looks for sentence-ending punctuation (periods, question marks, exclamation points) followed by whitespace or the end of the text. Reading time is estimated using an average adult silent-reading speed of roughly 200 words per minute — a widely used standard, though actual reading speed varies by person and by how dense or technical the text is.",
+      faqs: [
+        {
+          question: "How accurate is the reading time estimate?",
+          answer:
+            "It's a reasonable average, not a precise measurement — it assumes roughly 200 words per minute, which is a commonly cited average adult silent-reading speed. Dense technical writing, code-heavy documentation, or text with lots of numbers typically reads slower than that average; casual prose often reads faster.",
+        },
+        {
+          question: "Why is my character count different with and without spaces?",
+          answer:
+            "Character count with spaces includes every space character in the total length; without spaces, it strips those out. Some platforms and limits (like certain form fields) count spaces toward the limit, others don't — check which one applies to your specific use case.",
+        },
+        {
+          question: "Does this tool count words in languages other than English?",
+          answer:
+            "Word counting works by splitting on whitespace, so it works reasonably well for space-separated languages like English, Spanish, or French. Languages that don't use spaces between words (like Chinese or Japanese) won't get an accurate word count this way, though character count still works correctly for any language.",
+        },
+      ],
+    },
   },
   {
     slug: "case-converter",
@@ -349,10 +377,43 @@ export const tools: ToolConfig[] = [
     description:
       "Convert text to UPPERCASE, lowercase, Title Case, camelCase, snake_case, or kebab-case in one click.",
     category: "text",
-    keywords: ["case", "uppercase", "lowercase", "camelcase", "snakecase", "kebabcase"],
+    keywords: ["case converter", "text case converter", "camelcase converter", "uppercase to lowercase online"],
     exampleInput: "hello developer world",
     exampleOutput: "helloDeveloperWorld",
     component: dynamic(() => import("@/components/tools/case-converter")),
+    seo: {
+      seoTitle: "Case Converter — UPPERCASE, camelCase, snake_case Online",
+      seoDescription:
+        "Convert text between UPPERCASE, lowercase, Title Case, camelCase, snake_case, and kebab-case instantly. Paste once, copy any format you need.",
+      intro:
+        "A case converter takes a piece of text and rewrites it into a different capitalization style — UPPERCASE, lowercase, Title Case, or one of the programming-specific naming conventions like camelCase, snake_case, and kebab-case. This isn't just a cosmetic tool: different programming languages and platforms have strict conventions about which case style to use where, and manually retyping a variable name or converting a sentence to a URL slug by hand is slow and error-prone, especially across a long phrase.",
+      whenToUse:
+        "Developers reach for this most often when renaming a variable or function to match a language's convention — JavaScript and Java expect camelCase, Python and Rust expect snake_case, CSS classes and URLs commonly use kebab-case. It's also useful outside code: converting a heading to Title Case for a document, turning a phrase into ALL CAPS for emphasis, or prepping text for a case-sensitive comparison or search. If you're renaming a batch of database columns or API fields to match a new naming convention, converting each name here is faster than doing the character-by-character rewrite by hand.",
+      howItWorks:
+        "The converter first splits your input into individual words — breaking on spaces, hyphens, and underscores — then reassembles those words using the target style's specific rules: camelCase lowercases the first word and capitalizes the first letter of each subsequent word with no separator, snake_case lowercases everything and joins with underscores, kebab-case does the same but with hyphens, and Title Case capitalizes the first letter of every word while preserving spaces. Because it works on already-split words rather than just changing letter case, it correctly handles multi-word phrases, not just single words.",
+      faqs: [
+        {
+          question: "What's the difference between camelCase and PascalCase?",
+          answer:
+            "camelCase starts with a lowercase letter (helloWorld), while PascalCase capitalizes the first letter too (HelloWorld). camelCase is the convention for variables and functions in most languages; PascalCase is typically used for class and component names.",
+        },
+        {
+          question: "Why do some programming languages use snake_case and others use camelCase?",
+          answer:
+            "It's largely historical convention rather than a technical requirement — Python and Ruby communities standardized on snake_case, while JavaScript, Java, and C-family languages standardized on camelCase. Following your language's dominant convention makes your code easier for other developers to read.",
+        },
+        {
+          question: "Will this tool correctly convert text that's already in camelCase back to words?",
+          answer:
+            "This converter splits on spaces, hyphens, and underscores — it doesn't detect camelCase word boundaries within a single unbroken word like getUserData. If your input is already camelCase and you want it split into separate words first, you'll need to add spaces manually before converting to another case style.",
+        },
+        {
+          question: "Can I use this for converting text to a URL slug?",
+          answer:
+            "kebab-case output is close to a URL slug, but for proper slug generation — stripping accents, special characters, and handling edge cases — this site has a dedicated Slug Generator tool built specifically for that.",
+        },
+      ],
+    },
   },
   {
     slug: "hex-rgb-converter",
@@ -401,10 +462,38 @@ export const tools: ToolConfig[] = [
     description:
       "A split-pane Markdown editor with a live-rendered preview, so you can see exactly how your README or post will look.",
     category: "markdown",
-    keywords: ["markdown", "preview", "editor", "readme"],
+    keywords: ["markdown preview online", "markdown editor", "live markdown renderer", "readme preview tool"],
     exampleInput: "# Hello\n\nThis is **bold** text.",
     exampleOutput: "Rendered heading and bold text",
     component: dynamic(() => import("@/components/tools/markdown-preview")),
+    seo: {
+      seoTitle: "Markdown Preview — Live Online Markdown Editor & Renderer",
+      seoDescription:
+        "Write Markdown in a split-pane editor and see it rendered live, side by side. Perfect for READMEs, posts, and documentation before you commit.",
+      intro:
+        "Markdown is a lightweight markup syntax — using symbols like # for headings and ** for bold — that gets converted into formatted HTML, widely used for README files, documentation, blog posts, and comments on platforms like GitHub and Reddit. Because Markdown source looks like plain text with symbols sprinkled in, it's easy to make a small syntax mistake (a missing space after a #, an unclosed ** pair) that silently breaks the formatting. A live preview shows you exactly how the rendered output will look as you type, catching those mistakes immediately instead of after you've already committed or published.",
+      whenToUse:
+        "This is the natural tool for writing a GitHub README before pushing it (so you're not guessing how it'll render on GitHub's actual page), drafting a blog post for a Markdown-based static site generator or CMS, or writing technical documentation that needs headings, code blocks, and lists formatted correctly. It's also useful for quickly checking how a piece of Markdown someone sent you will actually display, without needing to paste it into the platform it's destined for first.",
+      howItWorks:
+        "This tool parses your Markdown input using a standard Markdown-to-HTML conversion library and renders the resulting HTML live in the preview pane as you type, re-parsing on every keystroke so the preview always reflects your current text. It supports the core CommonMark-style syntax — headings, emphasis, lists, links, images, blockquotes, and fenced code blocks — which covers what nearly all Markdown-consuming platforms expect.",
+      faqs: [
+        {
+          question: "Will this preview match exactly how GitHub renders my README?",
+          answer:
+            "Very closely for standard Markdown, but not pixel-perfect — GitHub uses its own Markdown flavor (GitHub Flavored Markdown) with some extensions like task lists and specific table styling that can render slightly differently. For anything platform-specific, always do a final check on the actual platform before publishing.",
+        },
+        {
+          question: "Why isn't my bold or italic text rendering correctly?",
+          answer:
+            "The most common cause is unmatched asterisks or underscores — bold needs a matching pair of ** on both sides (**text**), and italic needs a matching pair of single * or _ characters. A stray unmatched symbol will often cause everything after it to render incorrectly.",
+        },
+        {
+          question: "Does this tool support Markdown tables?",
+          answer:
+            "Yes, standard pipe-delimited tables with a header separator row render correctly. If you want a guided way to build a table without hand-typing the pipe syntax, this site also has a dedicated Markdown Table Generator tool.",
+        },
+      ],
+    },
   },
   {
     slug: "qr-code-generator",
@@ -515,10 +604,43 @@ export const tools: ToolConfig[] = [
     description:
       "Generate any number of paragraphs, sentences, or words of classic Lorem Ipsum placeholder text for wireframes and mockups.",
     category: "text",
-    keywords: ["lorem ipsum", "placeholder", "dummy text", "filler"],
+    keywords: ["lorem ipsum generator", "placeholder text generator", "dummy text online", "filler text generator"],
     exampleInput: "3 paragraphs",
     exampleOutput: "Lorem ipsum dolor sit amet…",
     component: dynamic(() => import("@/components/tools/lorem-ipsum-generator")),
+    seo: {
+      seoTitle: "Lorem Ipsum Generator — Free Placeholder Text Online",
+      seoDescription:
+        "Generate Lorem Ipsum placeholder text by paragraph, sentence, or word count for mockups and wireframes. Instant, customizable, no signup.",
+      intro:
+        "Lorem Ipsum is scrambled, meaningless Latin-derived text that's been the standard placeholder copy in design and publishing since the 1960s, adapted for digital use since the early days of desktop publishing software. Designers and developers use it to fill a layout with realistic-looking body text before real content exists, because it lets you judge things like line length, paragraph spacing, and how a design handles varying text volume — without the specific words distracting a reviewer's attention the way real, readable sentences would.",
+      whenToUse:
+        "This comes up constantly early in a project: building a webpage mockup or wireframe before the actual copy is written, testing how a CSS layout handles different amounts of text (a card with one short paragraph versus five), populating a CMS or component library with sample content for a demo, or stress-testing text truncation and overflow behavior in a UI. It's specifically useful because real sentences pull a viewer's attention to what the text *says* rather than how it *looks* — which is exactly the wrong focus when you're reviewing a layout, not proofreading copy.",
+      howItWorks:
+        "This generator builds text from a fixed pool of classic Lorem Ipsum vocabulary, randomly assembling words into sentences of varying length and sentences into paragraphs, so the output has natural-feeling variation in rhythm and paragraph size rather than repeating the same block verbatim. You can choose to generate by paragraphs, sentences, or a specific word count, and optionally force the output to start with the traditional \"Lorem ipsum dolor sit amet\" opening that most placeholder text is expected to begin with.",
+      faqs: [
+        {
+          question: "Does Lorem Ipsum actually mean anything in Latin?",
+          answer:
+            "No — it's derived from a passage in Cicero's writing but has been scrambled and altered over centuries of use to the point that it's not coherent or translatable Latin. That's actually the point: it looks like real language at a glance without being readable, which keeps a design reviewer's focus on layout rather than content.",
+        },
+        {
+          question: "Why use Lorem Ipsum instead of just typing random words?",
+          answer:
+            "Lorem Ipsum has a roughly natural distribution of word and sentence lengths, which makes it look and behave like real body text when flowing through a layout — unlike random word generators, which can produce unnaturally short or long words that don't represent realistic text wrapping and spacing.",
+        },
+        {
+          question: "Should I use Lorem Ipsum in a final, shipped product?",
+          answer:
+            "No — it should only ever be a temporary placeholder during design and development. Shipping Lorem Ipsum to production (a surprisingly common mistake) looks unprofessional and confuses real users, so always do a final content pass before launch.",
+        },
+        {
+          question: "Can I generate a specific word count instead of paragraphs?",
+          answer:
+            "Yes — switch the unit selector to \"Words\" and set the exact count you need, useful when you're filling a component with a strict character or word limit, like a card summary or meta description field.",
+        },
+      ],
+    },
   },
   {
     slug: "line-cleaner",
@@ -527,10 +649,38 @@ export const tools: ToolConfig[] = [
     description:
       "Paste any list or block of text to strip duplicate lines, empty lines, or extra whitespace, with case-sensitive matching optional.",
     category: "text",
-    keywords: ["duplicate lines", "empty lines", "deduplicate", "clean text"],
+    keywords: ["remove duplicate lines", "remove empty lines online", "deduplicate text", "clean up list online"],
     exampleInput: "apple\nbanana\napple\n\ncherry",
     exampleOutput: "apple\nbanana\ncherry",
     component: dynamic(() => import("@/components/tools/line-cleaner")),
+    seo: {
+      seoTitle: "Remove Duplicate & Empty Lines — Free Online Text Cleaner",
+      seoDescription:
+        "Strip duplicate lines, blank lines, and extra whitespace from any list or text block instantly. Case-sensitive matching optional, runs in your browser.",
+      intro:
+        "This tool cleans up messy line-based text — lists, CSV-like data, log output, or exported records — by removing duplicate lines, empty lines, or both, with an option to also trim leading and trailing whitespace from every line. It's the kind of small, repetitive cleanup task that's tedious to do manually in a text editor once a list grows past a few dozen lines, especially when duplicates aren't next to each other and are easy to miss by scanning visually.",
+      whenToUse:
+        "This is useful when you've merged two lists (like combining email addresses from two exports) and need to remove the overlap, when cleaning up a copy-pasted list that picked up blank lines from the source formatting, or when preparing a wordlist or dataset where duplicate entries would skew a count or a lookup. It's also handy for tidying a list of URLs, file paths, or log entries before feeding them into another tool or script that doesn't handle duplicates or blank lines gracefully.",
+      howItWorks:
+        "The tool splits your input on line breaks, then applies your selected filters in sequence: trimming whitespace from each line first (if enabled), removing lines that are now empty (if enabled), then removing duplicates by tracking which lines have already been seen and dropping any repeat. The case-sensitive toggle controls whether \"Apple\" and \"apple\" are treated as the same line or as different lines during the duplicate check — useful when you specifically care about, or want to ignore, capitalization differences.",
+      faqs: [
+        {
+          question: "Does this tool preserve the original order of my list?",
+          answer:
+            "Yes — when removing duplicates, the first occurrence of each line is kept in its original position, and only later repeats are removed. The list isn't sorted or reordered.",
+        },
+        {
+          question: "What counts as a 'duplicate' if the lines have different spacing?",
+          answer:
+            "That depends on whether \"Trim whitespace\" is enabled. With it on, \"apple\" and \" apple \" (with extra spaces) are treated as duplicates. With it off, they're treated as different lines since the whitespace itself is part of the comparison.",
+        },
+        {
+          question: "Can I remove duplicates while keeping empty lines, or vice versa?",
+          answer:
+            "Yes — the two options are independent checkboxes, so you can enable just one, both, or neither depending on what you're trying to clean up.",
+        },
+      ],
+    },
   },
   {
     slug: "url-encoder-decoder",
@@ -539,10 +689,38 @@ export const tools: ToolConfig[] = [
     description:
       "Percent-encode text for safe use in URLs, or decode an already-encoded URL back to readable text.",
     category: "encoding",
-    keywords: ["url encode", "url decode", "percent encoding", "uri"],
+    keywords: ["url encoder", "url decoder online", "percent encoding tool", "uri encode decode"],
     exampleInput: "https://example.com/search?q=hello world",
     exampleOutput: "https://example.com/search%3Fq%3Dhello%20world",
     component: dynamic(() => import("@/components/tools/url-encoder-decoder")),
+    seo: {
+      seoTitle: "URL Encoder / Decoder — Free Online Percent-Encoding Tool",
+      seoDescription:
+        "Percent-encode text for safe use in URLs, or decode an already-encoded URL back to plain text. Instant, accurate, runs entirely in your browser.",
+      intro:
+        "URLs can only safely contain a limited set of characters — letters, digits, and a handful of punctuation marks. Anything outside that set (spaces, ampersands, non-English characters, symbols like & or #) has to be percent-encoded: replaced with a % followed by the character's hex code, like %20 for a space. Without this encoding, those characters would either break the URL's structure or get silently mangled by whatever's parsing it. This tool converts text to its properly percent-encoded form, or reverses an encoded URL back into readable text.",
+      whenToUse:
+        "This comes up whenever you're building a URL by hand that includes user input or special characters — a search query with spaces, a redirect URL passed as a parameter, a filename with symbols in it. It's also useful for decoding a URL you've copied that looks like gibberish (full of %XX sequences) so you can actually read what it says, which is common when debugging a redirect chain or inspecting a tracking link.",
+      howItWorks:
+        "This tool uses JavaScript's built-in encodeURIComponent() and decodeURIComponent() functions, with an option to switch to encodeURI()/decodeURI() instead. The distinction matters: encodeURIComponent() escapes nearly everything non-alphanumeric, which is correct when encoding a single value that will become part of a URL (like a query parameter), while encodeURI() leaves structural characters like /, ?, and & untouched, which is correct when encoding an entire URL that should keep its existing structure intact.",
+      faqs: [
+        {
+          question: "What's the difference between encodeURI and encodeURIComponent?",
+          answer:
+            "encodeURIComponent() escapes every special character, including / and &, making it correct for encoding a single value (like a search term) that will be inserted into a URL. encodeURI() leaves URL-structural characters like /, ?, and & alone, making it correct for encoding a complete URL that should stay a valid, working link.",
+        },
+        {
+          question: "Why do spaces become %20 in URLs?",
+          answer:
+            "Space isn't a valid character in a URL, so it must be percent-encoded. %20 is the hex code for the space character (0x20 in ASCII). You may also see + used for spaces specifically within query strings, which is an older, application/x-www-form-urlencoded convention rather than strict URL encoding.",
+        },
+        {
+          question: "Why did decoding my URL produce garbled or incorrect text?",
+          answer:
+            "This usually happens when the string wasn't properly encoded to begin with, or when it's been encoded more than once (double-encoding). If decoding once still leaves %-sequences in the output, try decoding it a second time.",
+        },
+      ],
+    },
   },
   {
     slug: "html-encoder-decoder",
@@ -551,10 +729,38 @@ export const tools: ToolConfig[] = [
     description:
       "Escape special characters into HTML entities so markup renders as text, or decode entities back into readable HTML.",
     category: "encoding",
-    keywords: ["html encode", "html decode", "entities", "escape"],
+    keywords: ["html encoder", "html entity decoder", "escape html online", "html special characters"],
     exampleInput: '<div class="card">Hello & welcome</div>',
     exampleOutput: "&lt;div class=&quot;card&quot;&gt;Hello &amp; welcome&lt;/div&gt;",
     component: dynamic(() => import("@/components/tools/html-encoder-decoder")),
+    seo: {
+      seoTitle: "HTML Encoder / Decoder — Escape HTML Entities Online",
+      seoDescription:
+        "Convert text to HTML entities so markup displays as text instead of rendering, or decode entities back to readable HTML. Free, instant, in-browser.",
+      intro:
+        "HTML has a handful of characters — <, >, &, \", and ' — that have special meaning in markup, since they're used to define tags and attributes. If you want one of those characters to display literally on a page rather than being interpreted as markup (for example, showing a code snippet that includes a <div> tag as visible text), it needs to be replaced with its corresponding HTML entity, like &lt; for < and &amp; for &. This tool converts text to its escaped entity form, or reverses already-escaped entities back into readable characters.",
+      whenToUse:
+        "This is essential when displaying code examples or raw HTML/XML on a webpage without it actually rendering as markup — documentation sites, blog posts about code, and comment systems all need this to show a < character as text instead of starting a tag. It's also a basic building block of preventing cross-site scripting (XSS): escaping user-submitted content before displaying it back on a page prevents an attacker from injecting a <script> tag that the browser would otherwise execute.",
+      howItWorks:
+        "Encoding works via direct character substitution — this tool replaces each of the five HTML-significant characters (<, >, &, \", ') with its named entity equivalent (&lt;, &gt;, &amp;, &quot;, &#39;). Decoding reverses this by rendering the entities in an off-screen element and reading back the resulting text content, which correctly handles both named entities (&amp;) and numeric entities (&#38;), since browsers natively understand both forms.",
+      faqs: [
+        {
+          question: "Is HTML-encoding user input enough to prevent XSS attacks?",
+          answer:
+            "It's an important part of the defense, but not the whole picture — proper XSS prevention depends on context (encoding differs for HTML body text, attribute values, JavaScript strings, and URLs) and should be handled by your framework's built-in escaping rather than manual encoding alone. Treat this tool as useful for display purposes and learning, not as a substitute for a framework's security features in production code.",
+        },
+        {
+          question: "What's the difference between &amp; and &#38;?",
+          answer:
+            "They represent the same character (&) — &amp; is the named entity, easier to read, while &#38; is the numeric entity using the character's decimal code point. Browsers treat them identically; named entities are generally preferred for readability where they exist.",
+        },
+        {
+          question: "Why does my decoded HTML still show entity codes instead of the actual characters?",
+          answer:
+            "This usually means the entities are double-escaped — the & in an entity like &amp; was itself escaped to &amp;amp; at some point. Try decoding a second time, or check where the double-escaping happened in your original process.",
+        },
+      ],
+    },
   },
   {
     slug: "hash-generator",
@@ -620,10 +826,38 @@ export const tools: ToolConfig[] = [
     description:
       "Three calculators in one: find X% of a number, find what percent one number is of another, and calculate percent change between two values.",
     category: "calculators",
-    keywords: ["percentage", "percent change", "calculator"],
+    keywords: ["percentage calculator", "percent change calculator", "calculate percentage online", "what percent of"],
     exampleInput: "20% of 150",
     exampleOutput: "30",
     component: dynamic(() => import("@/components/tools/percentage-calculator")),
+    seo: {
+      seoTitle: "Percentage Calculator — X% of Y, Percent Change & More",
+      seoDescription:
+        "Calculate X% of Y, find what percent one number is of another, or work out percent change between two values — three calculators in one, instant results.",
+      intro:
+        "Percentage calculations come up constantly in everyday and professional contexts, but the three most common types — finding a percentage of a number, finding what percentage one number represents of another, and calculating the percent change between two values — each use a different formula, and it's easy to grab the wrong one under time pressure. This tool covers all three separately so you pick the calculation that actually matches your question instead of adapting a single generic formula by hand.",
+      whenToUse:
+        "Use \"X% of Y\" for things like calculating a tip, a discount, or a commission — how much is 15% of a $200 bill. Use \"X is what percent of Y\" when you know two totals and want the relationship between them — like what percentage of a budget has been spent, or what percentage of test questions were answered correctly. Use \"percent change\" when comparing two values over time — how much did revenue grow from last quarter to this quarter, or how much did a price drop in a sale — since this calculation specifically accounts for which value is the starting point.",
+      howItWorks:
+        "Each calculator uses a distinct formula. X% of Y multiplies Y by (X ÷ 100). X is what percent of Y divides X by Y and multiplies by 100. Percent change subtracts the starting value from the ending value, divides by the absolute value of the starting value, and multiplies by 100 — using the absolute value specifically so the sign of the result (positive for an increase, negative for a decrease) stays meaningful even when the starting value itself is negative.",
+      faqs: [
+        {
+          question: "What's the difference between percentage and percentage points?",
+          answer:
+            "If a rate goes from 20% to 25%, that's a 5 percentage point increase, but a 25% relative increase (since 5 is 25% of 20). These two ways of describing the same change can look very different, and mixing them up is a common source of confusion in statistics and reporting.",
+        },
+        {
+          question: "Why does percent change use the absolute value of the starting number?",
+          answer:
+            "Without it, a negative starting value would flip the sign of the result in a confusing way. Using the absolute value keeps the direction of the result (increase or decrease) intuitive and consistent regardless of whether the starting value itself is positive or negative.",
+        },
+        {
+          question: "How do I calculate a percentage discount?",
+          answer:
+            "Use the 'X% of Y' calculator to find the discount amount (e.g., 20% of a $50 item is $10), then subtract that from the original price to get the sale price ($40). This tool calculates the discount amount directly; the subtraction is a quick manual step.",
+        },
+      ],
+    },
   },
   {
     slug: "regex-tester",
@@ -1058,10 +1292,43 @@ export const tools: ToolConfig[] = [
     description:
       "Generate a bcrypt hash from any text with an adjustable cost factor, and verify whether plain text matches an existing hash.",
     category: "security",
-    keywords: ["bcrypt", "password hash", "hash generator"],
+    keywords: ["bcrypt generator online", "bcrypt hash generator", "bcrypt password hash", "bcrypt verify"],
     exampleInput: "correcthorsebattery",
     exampleOutput: "$2a$10$N9qo8uLOickgx2ZMRZoMy...",
     component: dynamic(() => import("@/components/tools/bcrypt-generator")),
+    seo: {
+      seoTitle: "bcrypt Generator — Hash & Verify Passwords Online Free",
+      seoDescription:
+        "Generate a bcrypt hash from any text with adjustable cost factor, and verify plain text against an existing hash. Runs entirely in your browser.",
+      intro:
+        "bcrypt is a password-hashing algorithm specifically designed to be slow — unlike general-purpose hash functions like SHA-256, which are built for speed, bcrypt deliberately takes a configurable amount of computation time per hash. That's the entire point: if an attacker gets a database of bcrypt-hashed passwords, the slowness makes brute-forcing every possible password computationally expensive, whereas a fast hash function lets an attacker try billions of guesses per second on modern hardware.",
+      whenToUse:
+        "Reach for this tool when you need to manually generate a bcrypt hash for testing — seeding a test database with a known password hash, verifying that your application's bcrypt implementation produces output in the format you expect, or checking whether a specific plain-text password matches a hash you already have during debugging. This is a testing and learning tool, not a substitute for hashing passwords server-side in your actual application, where the language's standard bcrypt library should handle this as part of your authentication flow.",
+      howItWorks:
+        "bcrypt combines the password with a randomly generated salt (preventing two identical passwords from producing the same hash) and runs the result through the Blowfish cipher's key setup phase repeatedly — the number of repetitions is controlled by the cost factor, where each increment doubles the computation time. A cost factor of 10 (a common default) means roughly 1,024 rounds; going to 12 means roughly 4,096 rounds, taking noticeably longer to compute but making brute-force attacks proportionally harder.",
+      faqs: [
+        {
+          question: "What cost factor should I use for bcrypt?",
+          answer:
+            "10-12 is a common range for production systems as of now — high enough to meaningfully slow down attackers, low enough that legitimate login requests don't feel slow to users. The right value depends on your server's hardware and should ideally take somewhere around 100-300 milliseconds per hash; adjust based on testing on your actual infrastructure.",
+        },
+        {
+          question: "Why does hashing the same password twice give different results?",
+          answer:
+            "bcrypt generates a random salt for every hash, which gets embedded in the output string itself (you can see it as part of the hash). This means the same password produces a different-looking hash every time, but bcrypt's verify function can still correctly check a password against any of those hashes since the salt is stored alongside it.",
+        },
+        {
+          question: "Is bcrypt still considered secure in 2026?",
+          answer:
+            "Yes, bcrypt remains a widely trusted and recommended choice for password hashing. Some newer alternatives like Argon2 offer additional resistance to certain specialized attacks (like GPU-based cracking), but bcrypt with an appropriate cost factor is still considered secure and is extensively battle-tested.",
+        },
+        {
+          question: "Should I hash passwords in the browser before sending them to my server?",
+          answer:
+            "No — hash passwords server-side, not client-side. Client-side hashing doesn't add real security (the hash effectively becomes the password from the server's perspective) and can create its own problems. This tool is for testing and inspection, not a pattern to copy into a real login flow.",
+        },
+      ],
+    },
   },
   {
     slug: "glassmorphism-generator",
@@ -1310,10 +1577,38 @@ export const tools: ToolConfig[] = [
     description:
       "Convert CSV data to a JSON array of objects, or convert a JSON array back into CSV — handles quoted fields and type detection.",
     category: "conversion",
-    keywords: ["csv to json", "json to csv", "converter"],
+    keywords: ["csv to json converter", "json to csv online", "convert csv to json free", "csv json converter"],
     exampleInput: "name,age\\nAda,30",
     exampleOutput: '[{"name": "Ada", "age": 30}]',
     component: dynamic(() => import("@/components/tools/csv-json-converter")),
+    seo: {
+      seoTitle: "CSV to JSON Converter — Free Online, Both Directions",
+      seoDescription:
+        "Convert CSV to a JSON array of objects, or JSON back to CSV, with automatic type detection and quoted-field support. Instant, in your browser.",
+      intro:
+        "CSV and JSON are two of the most common formats for structured data, but they're organized very differently — CSV is flat rows and columns with a header row defining field names, while JSON represents each record as an object with named key-value pairs, which can nest and doesn't require every record to have the same shape. Converting between them is something almost every data pipeline eventually needs, since spreadsheets and databases commonly export CSV while APIs and modern applications almost universally consume and produce JSON.",
+      whenToUse:
+        "This comes up when you've exported data from a spreadsheet or database as CSV but need to feed it into a JavaScript application, a NoSQL database, or an API that expects JSON. The reverse — JSON to CSV — is useful when you have API response data or a JSON export that you want to open and inspect in a spreadsheet program like Excel or Google Sheets, since spreadsheets don't read JSON natively but handle CSV perfectly.",
+      howItWorks:
+        "Converting CSV to JSON parses the CSV using the first row as field names, then builds one JSON object per remaining row, mapping each column value to its corresponding field name — with automatic type detection turning numeric-looking values into actual numbers and \"true\"/\"false\" into booleans rather than leaving everything as strings. Converting JSON to CSV takes an array of objects, collects the union of all field names across every object to build the header row, then writes one CSV row per object, properly quoting any field values that themselves contain commas or line breaks so the CSV stays valid.",
+      faqs: [
+        {
+          question: "What happens if my JSON objects don't all have the same fields?",
+          answer:
+            "The converter uses the union of all fields found across every object as the CSV header row. Objects missing a particular field will simply have an empty cell in that column for that row, rather than causing an error.",
+        },
+        {
+          question: "Does this handle CSV fields that contain commas or quotes?",
+          answer:
+            "Yes — properly quoted CSV fields (wrapped in double quotes, with internal quotes escaped as two double quotes, per the standard CSV convention) are parsed correctly rather than incorrectly split on commas that appear inside a quoted value.",
+        },
+        {
+          question: "Can I convert nested JSON objects to CSV?",
+          answer:
+            "CSV is inherently flat, so deeply nested objects or arrays within a field don't have a clean CSV representation — they'll typically be converted to their JSON string form within a single cell rather than expanded into separate columns. For deeply nested data, JSON is usually the better format to stay in.",
+        },
+      ],
+    },
   },
   {
     slug: "cron-builder",
